@@ -66,15 +66,15 @@ void setup() {
 
 void loop() {
 
-    delay(2000);
+    delay(3*60*1000);
 
 //Analog Photoresistor//
 
     int lux = int(Light(analogRead(0)));
 
-    Serial.print("Light Intensity: ");
-    Serial.print(lux); //Print Lux value 
-    Serial.println(" Lux");
+    //Serial.print("Light Intensity: ");
+    //Serial.print(lux); //Print Lux value 
+    //Serial.println(" Lux");
     
     //lightVal = analogRead(sensorPin);
     
@@ -131,6 +131,7 @@ void loop() {
     if(error) {
       Serial.print(F("deserializeJson() failed: "));
       Serial.println(error.c_str());
+      Serial.println(message)
       messageReady = false;
       return;
     }
