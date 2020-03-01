@@ -22,6 +22,7 @@
 #define SERVER_URL "api.knnabis.co"
 
 #ifndef STASSID
+//#define STASSID "No Robe Internet"
 #define STASSID "NonFreeWifi"
 #define STAPSK  "167222791"
 #endif
@@ -50,7 +51,7 @@ void loop() {
   // wait for WiFi connection
   //delay(3*60*1000);
 
-  delay(60 * 1000);
+  delay(2*60 * 1000);
   if ((WiFi.status() == WL_CONNECTED)) {
 
     WiFiClient client;
@@ -75,7 +76,7 @@ void loop() {
   }
   DeserializationError error = deserializeJson(doc,message);
   if(error) {
-    Serial.print(F("deserializeJson() failed: "));
+    Serial.print(F("deserializeJson() wifi module failed: "));
     Serial.println(error.c_str());
     Serial.println(message);
     return;

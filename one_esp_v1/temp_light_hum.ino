@@ -66,11 +66,12 @@ void setup() {
 
 void loop() {
 
-    delay(3*60*1000);
+    delay(1000);
 
 //Analog Photoresistor//
 
     int lux = int(Light(analogRead(0)));
+    int lux1 = int(Light(analogRead(1)));
 
     //Serial.print("Light Intensity: ");
     //Serial.print(lux); //Print Lux value 
@@ -138,9 +139,10 @@ void loop() {
     if(doc["type"] == "request") {
       doc["type"] = "response";
       // Get data from analog sensors
-      doc["L"] = lux; 
+      doc["L0"] = lux0;
+      doc["L1"] =lux1; 
       doc["T"] = t;
-      doc["H"] = h;
+      doc["H"] =h;
       serializeJson(doc,Serial);
     }
     messageReady = false;

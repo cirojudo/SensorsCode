@@ -12,17 +12,6 @@
 
 #include <ArduinoJson.h>
 
-#include <AverageValue.h>
-
-// Number of values to calculate with. Prevents memory problems
-const long MAX_VALUES_NUM = 10;
-
-AverageValue<long> aveL0(MAX_VALUES_NUM);
-AverageValue<long> aveL1(MAX_VALUES_NUM);
-AverageValue<long> aveT(MAX_VALUES_NUM);
-AverageValue<long> aveH(MAX_VALUES_NUM);
-
-
 
 
 //comunication
@@ -84,20 +73,20 @@ void loop() {
 //Analog Photoresistor//
 
     int lux0 = int(Light(analogRead(0)));
-    aveL0.push(lux0);
+    
     int lux1 = int(Light(analogRead(1)));
-    aveL1.push(lux1);
+    
 
 
 
 //Digital Temperature/Room Humidity//
 
     float h = dht.readHumidity(); // Read Humidity %
-    aveH.push(h);
+    
 
     float t = dht.readTemperature(); // Read temperature in Celsius
-    aveT.push(t);
-  
+    
+  Serial.println("Temperature - Humidity sensor disconnected");
     // Check if sensor is reading or connected
     if (isnan(h) || isnan(t)) {
     Serial.println("Temperature - Humidity sensor disconnected");
@@ -115,7 +104,7 @@ void loop() {
     // Attempt to deserialize the message
     DeserializationError error = deserializeJson(doc,message);
     if(error) {
-      Serial.print(F("deserializeJson() failed: "));
+      Serial.print(F("deserializeJson() Arduino failed: "));
       Serial.println(error.c_str());
       Serial.println(message);
       messageReady = false;
@@ -124,10 +113,10 @@ void loop() {
     if(doc["type"] == "request") {
       doc["type"] = "response";
       // Get data from analog sensors
-      doc["L0"] = aveL0.average();
-      doc["L1"] = aveL1.average(); 
-      doc["T"] = aveT.average();
-      doc["H"] = aveH.average();
+      doc["L0"] = lux0;
+      doc["L1"] =lux1; 
+      doc["T"] = t;
+      doc["H"] =h;
       serializeJson(doc,Serial);
     }
     messageReady = false;
