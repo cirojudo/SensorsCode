@@ -132,7 +132,7 @@ void loop() {
     if(error) {
       Serial.print(F("deserializeJson() failed: "));
       Serial.println(error.c_str());
-      Serial.println(message)
+      Serial.println(message);
       messageReady = false;
       return;
     }
