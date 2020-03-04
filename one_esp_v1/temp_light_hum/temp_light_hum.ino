@@ -66,7 +66,7 @@ void setup() {
 
 void loop() {
 
-    delay(3*60*1000);
+    delay(1000);
 
 //Analog Photoresistor//
 
@@ -131,7 +131,7 @@ void loop() {
     if(error) {
       Serial.print(F("deserializeJson() failed: "));
       Serial.println(error.c_str());
-      Serial.println(message)
+      Serial.println(message);
       messageReady = false;
       return;
     }
