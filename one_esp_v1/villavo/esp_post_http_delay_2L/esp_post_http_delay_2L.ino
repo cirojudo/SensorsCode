@@ -22,8 +22,8 @@
 #define SERVER_URL "api.knnabis.co"
 
 #ifndef STASSID
-//#define STASSID "No Robe Internet"
-#define STASSID "NonFreeWifi"
+#define STASSID "No Robe Internet"
+//#define STASSID "NonFreeWifi"
 #define STAPSK  "167222791"
 #endif
 

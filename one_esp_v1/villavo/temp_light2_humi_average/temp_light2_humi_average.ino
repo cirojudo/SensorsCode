@@ -12,17 +12,29 @@
 
 #include <ArduinoJson.h>
 
+#include <AverageValue.h>
+
+// Number of values to calculate with. Prevents memory problems
+const long MAX_VALUES_NUM = 10;
+
+AverageValue<long> aveL0(MAX_VALUES_NUM);
+AverageValue<long> aveL1(MAX_VALUES_NUM);
+AverageValue<long> aveT(MAX_VALUES_NUM);
+AverageValue<long> aveH(MAX_VALUES_NUM);
+
+
+
+
 //comunication
 String message = "";
 bool messageReady = false;
 
 ////////////// Analog Photoresistor //////////////////
 
-int sensorPin = A0; //Sensor connected to Analog 0
 //const int ledPin = 9; //LED Digital output D9 pin
 int val = 0; //Initial value ligth 
 
-int lightCal; //Variables for LED on/off
+//Variables for LED on/off
 int lightVal;
 
 int voltageread = 0;  //Voltage reading for lux conversion
@@ -30,7 +42,7 @@ int voltageread = 0;  //Voltage reading for lux conversion
 //////////////// Code for DHT 11 sensor //////////////
 
 #include "DHT.h"
-#define DHTPIN 2     // Digital pin 2 
+#define DHTPIN 2     // Analog pin 2 
 #define DHTTYPE DHT11   // DHT 11 sensor
 
 DHT dht(DHTPIN, DHTTYPE); // Initialize DHT sensor for normal 16mhz Arduino
@@ -55,7 +67,8 @@ void setup() {
 //Analog Photoresistor//
 
     //pinMode(ledPin, OUTPUT); //LED pin 9 output
-    lightCal = analogRead(sensorPin);
+
+
 
 //Digital Temperature/Room Humidity//
 
@@ -65,59 +78,31 @@ void setup() {
 ///////// Loop //////////
 
 void loop() {
-
+    //delay general para el arduino, debe estar presente en el wifi module
     delay(1000);
 
 //Analog Photoresistor//
 
-    int lux = int(Light(analogRead(0)));
+    int lux0 = int(Light(analogRead(0)));
+    aveL0.push(lux0);
     int lux1 = int(Light(analogRead(1)));
+    aveL1.push(lux1);
 
-    //Serial.print("Light Intensity: ");
-    //Serial.print(lux); //Print Lux value 
-    //Serial.println(" Lux");
-    
-    //lightVal = analogRead(sensorPin);
-    
-    //if (lightVal < lightCal - 50)
-    //{
-    //    digitalWrite(9, HIGH); //If ligth intensity is low turn LED on
-    //}
 
-    //else
-    //{
-    //    digitalWrite(9, LOW); //Else turn LED off
-    //}
 
 //Digital Temperature/Room Humidity//
 
     float h = dht.readHumidity(); // Read Humidity %
+    aveH.push(h);
 
     float t = dht.readTemperature(); // Read temperature in Celsius
-
+    aveT.push(t);
   
     // Check if sensor is reading or connected
     if (isnan(h) || isnan(t)) {
     Serial.println("Temperature - Humidity sensor disconnected");
     return;
     }
-
-    ///////// Humidity
-   // Serial.print("Humidity:        "); 
-   //Serial.print(h);
-   // Serial.print(" %\t");
-    //  Serial.println();
-
-    ///////// Temperature Celsuis
-    //Serial.print("Temperature:     "); 
-    //Serial.print(t);
-    //Serial.print(" *C ");
-    //Serial.println();
-
-    ///////////////////////////////////
-
-
-
 
     while(Serial.available()) {
     message = Serial.readString();
@@ -139,10 +124,10 @@ void loop() {
     if(doc["type"] == "request") {
       doc["type"] = "response";
       // Get data from analog sensors
-      doc["L0"] = lux0;
-      doc["L1"] =lux1; 
-      doc["T"] = t;
-      doc["H"] =h;
+      doc["L0"] = aveL0.average();
+      doc["L1"] = aveL1.average(); 
+      doc["T"] = aveT.average();
+      doc["H"] = aveH.average();
       serializeJson(doc,Serial);
     }
     messageReady = false;

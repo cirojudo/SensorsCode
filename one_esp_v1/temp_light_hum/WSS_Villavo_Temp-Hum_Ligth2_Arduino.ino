@@ -2,7 +2,9 @@
 ////////////////// WSEEDSOLUTIONS ////////////////////
 //////////////////////////////////////////////////////
 ////////////// Analog Photoresistor //////////////////
+//////////////////////////////////////////////////////
 ////////////////// Ligth sensor //////////////////////
+/////////////////////  (2)  //////////////////////////
 //////////////////////////////////////////////////////
 ///////////// Temperature - Humidity /////////////////
 //////////////////////////////////////////////////////
@@ -15,15 +17,6 @@
 //comunication
 String message = "";
 bool messageReady = false;
-
-////////////// Analog Photoresistor //////////////////
-
-int sensorPin = A0; //Sensor connected to Analog 0
-//const int ledPin = 9; //LED Digital output D9 pin
-int val = 0; //Initial value ligth 
-
-int lightCal; //Variables for LED on/off
-int lightVal;
 
 int voltageread = 0;  //Voltage reading for lux conversion
 
@@ -45,17 +38,11 @@ double Light (int voltageread)
     return lux;
 }
 
-
 ///////// Void //////////
 
 void setup() {
     Serial.begin(9600);
     Serial.println("Ligth - Temperature - Humidity Sensors");
-
-//Analog Photoresistor//
-
-    //pinMode(ledPin, OUTPUT); //LED pin 9 output
-    lightCal = analogRead(sensorPin);
 
 //Digital Temperature/Room Humidity//
 
@@ -73,28 +60,11 @@ void loop() {
     int lux = int(Light(analogRead(0)));
     int lux1 = int(Light(analogRead(1)));
 
-    //Serial.print("Light Intensity: ");
-    //Serial.print(lux); //Print Lux value 
-    //Serial.println(" Lux");
-    
-    //lightVal = analogRead(sensorPin);
-    
-    //if (lightVal < lightCal - 50)
-    //{
-    //    digitalWrite(9, HIGH); //If ligth intensity is low turn LED on
-    //}
-
-    //else
-    //{
-    //    digitalWrite(9, LOW); //Else turn LED off
-    //}
-
 //Digital Temperature/Room Humidity//
 
     float h = dht.readHumidity(); // Read Humidity %
 
     float t = dht.readTemperature(); // Read temperature in Celsius
-
   
     // Check if sensor is reading or connected
     if (isnan(h) || isnan(t)) {
@@ -103,18 +73,33 @@ void loop() {
     }
 
     ///////// Humidity
-   // Serial.print("Humidity:        "); 
-   //Serial.print(h);
-   // Serial.print(" %\t");
-    //  Serial.println();
+   Serial.print("Humidity:        "); 
+   Serial.print(h);
+   Serial.print(" %\t");
+   Serial.println();
 
     ///////// Temperature Celsuis
-    //Serial.print("Temperature:     "); 
-    //Serial.print(t);
-    //Serial.print(" *C ");
-    //Serial.println();
+    Serial.print("Temperature:     "); 
+    Serial.print(t);
+    Serial.print(" *C ");
+    Serial.println();
 
     ///////////////////////////////////
+
+    ///////// Lux 0
+
+    Serial.print("L0:     "); 
+    Serial.print(lux);
+    Serial.print(" lux ");
+    Serial.println();
+
+    ///////// Lux 1
+
+    Serial.print("L1:     "); 
+    Serial.print(lux1);
+    Serial.print(" lux ");
+    Serial.println();
+
 
 
 
