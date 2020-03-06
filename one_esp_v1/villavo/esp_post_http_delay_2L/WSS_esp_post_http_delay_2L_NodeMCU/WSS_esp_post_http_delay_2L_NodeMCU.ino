@@ -9,7 +9,7 @@
 ////Serial device/////
 //////////////////////
 
-//String S = "w_0";
+String S = "";
 
 //////////////////////
 
@@ -80,7 +80,7 @@ void loop() {
     long L1 = 0; 
     long T = 0;
     long H = 0;
-    String S = "";
+    //String S = "";
     doc["type"] = "request";
     serializeJson(doc,Serial);
     // Reading the response
@@ -114,7 +114,7 @@ void loop() {
     L1 = doc["L1"];
     T = doc["T"];
     H = doc["H"];
-    S = doc["S"]
+    String S;
     String json;
     serializeJson(doc, json);
     int httpCode = http.POST(json);

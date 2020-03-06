@@ -17,7 +17,7 @@
 ////Serial device/////
 //////////////////////
 
-String S = "w_0";
+String serialDevice = "w_0";
 
 //////////////////////
 
@@ -144,7 +144,7 @@ void loop() {
       doc["L1"] = lux1; 
       doc["T"] = t;
       doc["H"] = h;
-      doc["S"] = S;
+      doc["S"] = serialDevice;
       serializeJson(doc,Serial);
     }
     messageReady = false;
