@@ -11,8 +11,15 @@
 ////////////// Arduino Sensor code ///////////////////
 //////////////////////////////////////////////////////
 
-
 #include <ArduinoJson.h>
+
+//////////////////////
+////Serial device/////
+//////////////////////
+
+String serialDevice = "w_0";
+
+//////////////////////
 
 //comunication
 String message = "";
@@ -134,9 +141,10 @@ void loop() {
       doc["type"] = "response";
       // Get data from analog sensors
       doc["L0"] = lux;
-      doc["L1"] =lux1; 
+      doc["L1"] = lux1; 
       doc["T"] = t;
-      doc["H"] =h;
+      doc["H"] = h;
+      doc["S"] = serialDevice;
       serializeJson(doc,Serial);
     }
     messageReady = false;

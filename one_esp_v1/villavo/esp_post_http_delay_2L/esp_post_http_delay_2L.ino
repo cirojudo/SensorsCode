@@ -1,3 +1,18 @@
+//////////////////////////////////////////////////////
+////////////////// WSEEDSOLUTIONS ////////////////////
+//////////////////////////////////////////////////////
+////////////// NodeMCU Wifi code /////////////////////
+//////////////////////////////////////////////////////
+
+
+//////////////////////
+////Serial device/////
+//////////////////////
+
+String serialDevice = "w_0";
+
+//////////////////////
+
 /**
    PostHTTPClient.ino
 
@@ -10,6 +25,7 @@
 #include <ArduinoJson.h>
 
 #define USE_SERIAL Serial
+
 
 /* this can be run with an emulated server on host:
         cd esp8266-core-root-dir
@@ -26,6 +42,7 @@
 //#define STASSID "NonFreeWifi"
 #define STAPSK  "167222791"
 #endif
+
 
 void setup() {
 
@@ -96,6 +113,7 @@ void loop() {
     L1 = doc["L1"];
     T = doc["T"];
     H = doc["H"];
+    serialDevice = doc["S"]
     String json;
     serializeJson(doc, json);
     int httpCode = http.POST(json);

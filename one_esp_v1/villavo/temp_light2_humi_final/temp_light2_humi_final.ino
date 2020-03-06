@@ -12,8 +12,6 @@
 
 #include <ArduinoJson.h>
 
-
-
 //comunication
 String message = "";
 bool messageReady = false;
