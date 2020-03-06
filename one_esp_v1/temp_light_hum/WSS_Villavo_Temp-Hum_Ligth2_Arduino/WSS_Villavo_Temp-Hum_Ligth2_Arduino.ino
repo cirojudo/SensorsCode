@@ -3,7 +3,7 @@
 //////////////////////////////////////////////////////
 ////////////// Analog Photoresistor //////////////////
 //////////////////////////////////////////////////////
-////////////////// Light sensor //////////////////////
+////////////////// Ligth sensor //////////////////////
 /////////////////////  (2)  //////////////////////////
 //////////////////////////////////////////////////////
 ///////////// Temperature - Humidity /////////////////
@@ -23,7 +23,7 @@ int voltageread = 0;  //Voltage reading for lux conversion
 //////////////// Code for DHT 11 sensor //////////////
 
 #include "DHT.h"
-#define DHTPIN 2     // Digital pin 2 
+#define DHTPIN 8     // Digital pin 2 
 #define DHTTYPE DHT11   // DHT 11 sensor
 
 DHT dht(DHTPIN, DHTTYPE); // Initialize DHT sensor for normal 16mhz Arduino
@@ -35,6 +35,15 @@ double Light (int voltageread)
     double Vout = voltageread * 0.0048828125; // Voltage output
     //int lux = (2500 / Vout - 500) / 10;
      int lux=500/(10*((5-Vout)/Vout)); //Conversion to Lux
+    return lux;
+}
+
+//Method 2 for voltage to lux conversion//
+double Light2 (int voltageread)
+{
+    double Vout = voltageread * 0.0048828125; // Voltage output
+    int lux = (2500 / Vout - 500) / 10;
+    //int lux=500/(10*((5-Vout)/Vout)); //Conversion to Lux
     return lux;
 }
 
@@ -53,12 +62,12 @@ void setup() {
 
 void loop() {
 
-    delay(1000);
+    delay(5000);
 
 //Analog Photoresistor//
 
-    int lux = int(Light(analogRead(0)));
-    int lux1 = int(Light(analogRead(1)));
+    int lux = int(Light2(analogRead(0)));
+    int lux1 = int(Light2(analogRead(1)));
 
 //Digital Temperature/Room Humidity//
 
@@ -73,38 +82,41 @@ void loop() {
     }
 
     ///////// Humidity
-   Serial.print("Humidity:        "); 
-   Serial.print(h);
-   Serial.print(" %\t");
-   Serial.println();
+   //Serial.print("Humidity:        "); 
+   //Serial.print(h);
+   //Serial.print(" %\t");
+   //Serial.println();
 
     ///////// Temperature Celsuis
-    Serial.print("Temperature:     "); 
-    Serial.print(t);
-    Serial.print(" *C ");
-    Serial.println();
+    //Serial.print("Temperature:     "); 
+    //Serial.print(t);
+    //Serial.print(" *C ");
+    //Serial.println();
 
     ///////////////////////////////////
 
     ///////// Lux 0
 
-    Serial.print("L0:     "); 
-    Serial.print(lux);
-    Serial.print(" lux ");
-    Serial.println();
+    //Serial.print("L0:     "); 
+    //Serial.print(lux);
+    //Serial.print(" lux ");
+    //Serial.println();
 
     ///////// Lux 1
 
-    Serial.print("L1:     "); 
-    Serial.print(lux1);
-    Serial.print(" lux ");
-    Serial.println();
+    //Serial.print("L1:     "); 
+    //Serial.print(lux1);
+    //Serial.print(" lux ");
+    //Serial.println();
+
+
+
+
 
     while(Serial.available()) {
     message = Serial.readString();
     messageReady = true;
-    }
-
+  }
   // Only process message if there's one
   if(messageReady) {
     // The only messages we'll parse will be formatted in JSON
@@ -121,7 +133,7 @@ void loop() {
     if(doc["type"] == "request") {
       doc["type"] = "response";
       // Get data from analog sensors
-      doc["L0"] = lux0;
+      doc["L0"] = lux;
       doc["L1"] =lux1; 
       doc["T"] = t;
       doc["H"] =h;
