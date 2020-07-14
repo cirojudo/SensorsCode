@@ -139,12 +139,12 @@ void loop() {
     }
     if(doc["type"] == "request") {
       doc["type"] = "response";
+      doc["S"] = serialDevice;
       // Get data from analog sensors
       doc["L0"] = lux;
       doc["L1"] = lux1; 
       doc["T"] = t;
       doc["H"] = h;
-      doc["S"] = serialDevice;
       serializeJson(doc,Serial);
     }
     messageReady = false;

@@ -9,7 +9,7 @@
 ////Serial device/////
 //////////////////////
 
-String S = "";
+
 
 //////////////////////
 
@@ -76,8 +76,8 @@ void loop() {
 
     //USE_SERIAL.print("[HTTP] begin...\n");
     DynamicJsonDocument doc(1024);
-    long L0 = 0; 
-    long L1 = 0; 
+    long L0 = 0;
+    long L1 = 0;
     long T = 0;
     long H = 0;
     //String S = "";
@@ -114,7 +114,7 @@ void loop() {
     L1 = doc["L1"];
     T = doc["T"];
     H = doc["H"];
-    String S;
+    //S = doc["S"];
     String json;
     serializeJson(doc, json);
     int httpCode = http.POST(json);
