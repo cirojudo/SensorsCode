@@ -30,7 +30,7 @@ int voltageread = 0;  //Voltage reading for lux conversion
 //////////////// Code for DHT 11 sensor //////////////
 
 #include "DHT.h"
-#define DHTPIN 8     // Digital pin 2 
+#define DHTPIN 2     // Digital pin 2 
 #define DHTTYPE DHT22   // DHT 11 sensor
 
 DHT dht(DHTPIN, DHTTYPE); // Initialize DHT sensor for normal 16mhz Arduino

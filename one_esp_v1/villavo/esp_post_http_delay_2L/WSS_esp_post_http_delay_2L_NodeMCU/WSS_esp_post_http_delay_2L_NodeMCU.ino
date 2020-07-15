@@ -1,75 +1,110 @@
-//////////////////////////////////////////////////////
-////////////////// WSEEDSOLUTIONS ////////////////////
-//////////////////////////////////////////////////////
-////////////// NodeMCU Wifi code /////////////////////
-//////////////////////////////////////////////////////
-
-
-//////////////////////
-////Serial device/////
-//////////////////////
-
-
-
-//////////////////////
-
-/**
-   PostHTTPClient.ino
-
-    Created on: 21.11.2016
-
-*/
-
+#include "OTABlynkCredentials.h"
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
-#include <ArduinoJson.h>
-
-#define USE_SERIAL Serial
-
-
-/* this can be run with an emulated server on host:
-        cd esp8266-core-root-dir
-        cd tests/host
-        make ../../libraries/ESP8266WebServer/examples/PostServer/PostServer
-        bin/PostServer/PostServer
-   then put your PC's IP address in SERVER_IP below, port 9080 (instead of default 80):
-*/
-//#define SERVER_IP "10.0.1.7:9080" // PC address with emulation on host
 #define SERVER_URL "api.knnabis.co"
 
-#ifndef STASSID
-#define STASSID "No Robe Internet"
-//#define STASSID "NonFreeWifi"
-#define STAPSK  "167222791"
-#endif
+/* #ifdef ESP8266
+#include <BlynkSimpleEsp8266.h>
+#elif defined(ESP32)
+#include <BlynkSimpleEsp32.h>
+#else
+#error "Board not found"
+#endif */
+
+credentials Credentials;
 
 
-void setup() {
 
-  USE_SERIAL.begin(9600);
+//Variables
+char pass[33];
+bool connected_to_internet = 0;
+const int Erasing_button = 0;
 
-  USE_SERIAL.println();
-  USE_SERIAL.println();
-  USE_SERIAL.println();
 
-  WiFi.begin(STASSID, STAPSK);
+//Provide credentials for your ESP server
+char* esp_ssid = "wseedsolutions";
+char* esp_pass = "wseedsolutions";
 
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    USE_SERIAL.print(".");
+//
+//
+// .     Add your variables 
+//
+// .             HERE
+// .
+//
+//
+
+
+
+
+
+void setup()
+
+{
+
+  Serial.begin(9600);
+  pinMode(Erasing_button, INPUT);
+
+
+  for (uint8_t t = 4; t > 0; t--) {
+    Serial.println(t);
+    delay(1000);
   }
-  USE_SERIAL.println("");
-  USE_SERIAL.print("Connected! IP address: ");
-  USE_SERIAL.println(WiFi.localIP());
+
+  // Press and hold the button to erase all the credentials
+  if (digitalRead(Erasing_button) == LOW)
+  {
+    Credentials.Erase_eeprom();
+
+  }
+
+  String pass_string = Credentials.EEPROM_Config();
+  pass_string.toCharArray(pass, 33);
+
+  if (Credentials.credentials_get())
+  {
+
+    Serial.println(pass);
+    connected_to_internet = 1;
+
+  }
+  else
+  {
+      Serial.println("no credentials");
+    Credentials.setupAP(esp_ssid, esp_pass);
+    connected_to_internet = 0;
+  }
+
+
+  if (connected_to_internet)
+  {
+      Serial.println("WIFI MI PA");
+
+    //
+    //
+    // .  Write the setup part of your code
+    //
+    // .             HERE
+    // .
+    //
+    //
+
+  }
+
+
 
 }
 
-void loop() {
-  // wait for WiFi connection
-  //delay(3*60*1000);
 
-  delay(2*60 * 1000);
-  if ((WiFi.status() == WL_CONNECTED)) {
+
+void loop()
+{
+  Credentials.server_loops();
+//delay(2*60 * 1000);
+delay(60*1000);
+  if (connected_to_internet)
+  {
+
 
     WiFiClient client;
     HTTPClient http;
@@ -99,14 +134,8 @@ void loop() {
     Serial.println(message);
     return;
   }
-  
-
-
-    
-
-    // configure traged server and url
-    http.begin(client, "http://" SERVER_URL "/measurements/wifi_module/"); //HTTP
-    http.addHeader("Content-Type", "application/json");
+   http.begin( "http://" SERVER_URL "/measurements/wifi_module/");
+       http.addHeader("Content-Type", "application/json");
 
     //USE_SERIAL.print("[HTTP] POST...\n");
     // start connection and send HTTP header and body
@@ -122,7 +151,7 @@ void loop() {
     // httpCode will be negative on error
     if (httpCode > 0) {
       // HTTP header has been send and Server response header has been handled
-      USE_SERIAL.printf("[HTTP] POST... code: %d\n", httpCode);
+      Serial.printf("[HTTP] POST... code: %d\n", httpCode);
 
       // file found at server
       if (httpCode == HTTP_CODE_OK) {
@@ -136,7 +165,17 @@ void loop() {
     }
 
     http.end();
-  }
 
-  //delay(10000);
+    //
+    //
+    // .  Write the loop part of your code
+    //
+    // .             HERE
+    // .
+    //
+    //
+
+
+    
+  }
 }
