@@ -108,7 +108,7 @@ delay(60*1000);
     HTTPClient http;
 
     //USE_SERIAL.print("[HTTP] begin...\n");
-    DynamicJsonDocument doc(1024);
+    DynamicJsonDocument doc(250);
     float L0 = 0.0;
     float L1 = 0.0;
     float T = 0.0;
