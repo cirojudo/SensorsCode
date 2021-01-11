@@ -17,7 +17,7 @@
 ////Serial device/////
 //////////////////////
 
-String serialDevice = "w_1";
+String serialDevice = "w_4";
 
 //////////////////////
 
@@ -152,7 +152,7 @@ void loop() {
   // Only process message if there's one
   if(messageReady) {
     // The only messages we'll parse will be formatted in JSON
-    DynamicJsonDocument doc(1024); // ArduinoJson version 6+
+    DynamicJsonDocument doc(250); // ArduinoJson version 6+
     // Attempt to deserialize the message
     DeserializationError error = deserializeJson(doc,message);
     if(error) {

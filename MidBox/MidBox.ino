@@ -1,7 +1,7 @@
 #include "OTABlynkCredentials.h"
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
-#define SERVER_URL "api.knnabis.co"
+#define SERVER_URL "wseeds.klaus.market"
 
 /* #ifdef ESP8266
 #include <BlynkSimpleEsp8266.h>

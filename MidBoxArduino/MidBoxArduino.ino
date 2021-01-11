@@ -17,7 +17,7 @@
 ////Serial device/////
 //////////////////////
 
-String serialDevice = "w_0";
+String serialDevice = "w_3";
 
 //////////////////////
 

@@ -1,6 +1,6 @@
 #include "OTABlynkCredentials.h"
 #include <ESP8266HTTPClient.h>
-#define SERVER_URL "api.knnabis.co"
+#define SERVER_URL "wseeds.klaus.market"
 
 #ifdef ESP8266
 #include <BlynkSimpleEsp8266.h>
@@ -106,7 +106,7 @@ delay(60*1000);
     HTTPClient http;
 
     //USE_SERIAL.print("[HTTP] begin...\n");
-    DynamicJsonDocument doc(1024);
+    DynamicJsonDocument doc(250);
     long L0 = 0;
     long L1 = 0;
     long L2 = 0;

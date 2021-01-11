@@ -1,56 +1,158 @@
-#define SensorPin 0
-#define TempPin 1
-unsigned long int avgValue;  //Store the average value of the sensor feedback
-float b;
-int buf[10],temp;
-int Temperature=0;
- 
-void setup()
-{
-  pinMode(13,OUTPUT);  
-  Serial.begin(9600);  
-  Serial.println("Ready");    //Test the serial monitor
+#include <SoftwareSerial.h> 
+
+SoftwareSerial BLU(9,8);
+
+const int IN1=7; 
+const int IN2=6; 
+const int IN3=4; 
+const int IN4=5; 
+
+const int ledDe =3;
+const int ledIz =2;
+
+char accion=' ';
+
+bool retro=false;
+bool avan = false;
+bool Iz = false;
+bool De = false;
+
+
+void setup() {
+
+  BLU.begin(9600);
+  
+  pinMode(IN1,OUTPUT);
+  pinMode(IN2,OUTPUT);
+
+  pinMode(IN3,OUTPUT);
+  pinMode(IN4,OUTPUT);
+  
+  pinMode(ledDe,OUTPUT);
+  pinMode(ledIz,OUTPUT);
+
+  InicioOk(); // Indica mediante los LEDS qu funciona bien.
+  InicioOk();
 }
-void loop()
-{
+void loop() {
   
-  //temperature = readTemperature();
-  //Temperature=analogRead(TempPin);
-  
-  
-  for(int i=0;i<10;i++)       //Get 10 sample value from the sensor for smooth the value
-  { 
-    buf[i]=analogRead(SensorPin);
-    delay(10);
-  }
-  for(int i=0;i<9;i++)        //sort the analog from small to large
-  {
-    for(int j=i+1;j<10;j++)
-    {
-      if(buf[i]>buf[j])
-      {
-        temp=buf[i];
-        buf[i]=buf[j];
-        buf[j]=temp;
-      }
+  if(BLU.available()>0){
+        accion = BLU.read();
+        if(accion=='U'){
+          Up();
+          
+          }
+        if(accion=='S'){
+          Stop();
+          }
+        if(accion=='B'){
+          Back();
+         }
+        if(accion=='R'){
+          Rigth();
+          }
+        if(accion=='L'){
+          Left();
+          }
+       
     }
+   if(retro==true){
+       ModoSirena();
+    }
+   if(avan==true){
+        EncenderLeds();
+     }
+   if(De==true){
+     digitalWrite(ledDe,HIGH);
+     digitalWrite(ledIz,LOW);
+    }
+   if(Iz==true){
+    digitalWrite(ledDe,LOW);
+    digitalWrite(ledIz,HIGH);
+    }
+   if(retro==false||avan==false){
+         ApagarLeds();
+     }
+
+}
+void InicioOk(){
+   digitalWrite(ledDe,HIGH);
+   digitalWrite(ledIz,HIGH);
+   delay(500);
+   digitalWrite(ledDe,LOW);
+   digitalWrite(ledIz,LOW);
+   delay(500);
+   digitalWrite(ledDe,HIGH);
+   digitalWrite(ledIz,HIGH);
+   delay(500);
+   digitalWrite(ledDe,LOW);
+   digitalWrite(ledIz,LOW);
+   delay(3000);
   }
-  avgValue=0;
-  for(int i=2;i<8;i++)                      //take the average value of 6 center sample
-    avgValue+=buf[i];
-  float phValue=(float)avgValue*5.0/1024/6; //convert the analog into millivolt
-  phValue=2.9*phValue;                      //convert the millivolt into pH value
-  
-  
-  
-  Serial.print("    pH:");  
-  Serial.print(phValue,2);
-  Serial.println(" ");
-  Serial.print("    Temp:");  
-  //Serial.print(Temperature);
-  Serial.println(" ");
-  digitalWrite(13, HIGH);       
-  delay(800);
-  digitalWrite(13, LOW); 
+void EncenderLeds(){
+  digitalWrite(ledDe,HIGH);
+  digitalWrite(ledIz,HIGH);
+  }
+void ModoSirena(){
+     digitalWrite(ledDe,HIGH);
+     digitalWrite(ledIz,LOW);
+     delay(100);
+     digitalWrite(ledDe,LOW);
+     digitalWrite(ledIz,HIGH);
+     delay(100);
+     digitalWrite(ledDe,LOW);
+     digitalWrite(ledIz,LOW);
+  }
+void ApagarLeds(){
+  digitalWrite(ledDe,LOW);
+  digitalWrite(ledIz,LOW);
+}
+
+void Up(){
+  avan = true;
+  retro=false;
+  digitalWrite(IN1,HIGH);
+  digitalWrite(IN2,LOW);
+
+  digitalWrite(IN3,HIGH);
+  digitalWrite(IN4,LOW);
+ }
+void Back(){
+  retro=true;
+  digitalWrite(IN1,LOW);
+  digitalWrite(IN2,HIGH);
+
+  digitalWrite(IN3,LOW);
+  digitalWrite(IN4,HIGH);
+  }
+void Stop(){
+  retro=false;
+  avan=false;
+  De=false;
+  Iz=false;
+  digitalWrite(IN1,LOW);
+  digitalWrite(IN2,LOW);
+
+  digitalWrite(IN3,LOW);
+  digitalWrite(IN4,LOW);
+ }
+void Rigth(){
+  De=true;
+  Iz=false;
+  digitalWrite(IN1,HIGH);
+  digitalWrite(IN2,LOW);
+
+  digitalWrite(IN3,LOW);
+  digitalWrite(IN4,LOW);
+ 
+}
+void Left(){
+  Iz=true;
+  De=false;
+  digitalWrite(IN1,LOW);
+  digitalWrite(IN2,LOW);
+
+  digitalWrite(IN3,HIGH);
+  digitalWrite(IN4,LOW);
  
 }
