@@ -1,6 +1,6 @@
 #include "OTABlynkCredentials.h"
 #include <ESP8266HTTPClient.h>
-#define SERVER_URL "api.knnabis.co"
+#define SERVER_URL "wseeds.klaus.market"
 
 #ifdef ESP8266
 #include <BlynkSimpleEsp8266.h>
@@ -49,9 +49,8 @@ void setup()
     Serial.println(t);
     delay(1000);
   }
-
-
-
+// TO DELETE PROM BY DEFAULT
+// Credentials.Erase_eeprom();
   // Press and hold the button to erase all the credentials
   if (digitalRead(Erasing_button) == LOW)
   {
